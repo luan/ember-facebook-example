@@ -3,6 +3,10 @@ Ember.Facebook = Ember.Mixin.create
   appId: undefined
   fetchPicture: true
 
+  init: ->
+    @_super()
+    window.FBApp = this
+
   appIdChanged: (->
     @removeObserver('appId')
     window.fbAsyncInit = => @fbAsyncInit()
@@ -26,6 +30,7 @@ Ember.Facebook = Ember.Mixin.create
       xfbml:  true
 
     @set 'FBloading', true
+    FB.Event.subscribe 'auth.authResponseChange', (response) => @updateFBUser(response)
     FB.getLoginStatus (response) => @updateFBUser(response)
 
   updateFBUser: (response) ->
@@ -48,13 +53,38 @@ Ember.Facebook = Ember.Mixin.create
 
 Ember.FacebookView = Ember.View.extend
   classNameBindings: ['className']
-  
+
   init: ->
     @_super()
+    @setClassName()
+    @attributeBindings.pushObjects attr for attr of this when attr.match(/^data-/)?
+
+  setClassName: ->
     @set 'className', "fb-#{@type}"
 
-    @attributeBindings.pushObjects attr for attr of this when attr.match(/^data-/)?
-    window.f = this
+  parse: ->
+    FB.XFBML.parse @$().parent()[0].context if FB?
 
   didInsertElement: ->
-    FB.XFBML.parse @$().parent()[0].context if FB?
+    @parse()
+
+Ember.FacebookLoginButton = Ember.FacebookView.extend
+  userBinding: 'FBApp.FBUser'
+
+  userChanged: (->
+    if @get('user')
+      @set 'className', ''
+      @rerender()
+    else
+      @loggedOff()
+
+  ).observes('user')
+
+  loggedOff: ->
+    @$().html (@get 'text' or 'Login')
+    @setClassName()
+    @parse()
+
+  didInsertElement: ->
+    unless @user?
+      @loggedOff()

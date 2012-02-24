@@ -8,6 +8,13 @@
           <li class="layout-nesting"><a href="#layout-nesting">Layout Nesting</a></li>
         </ul>
       </div>
+      <div class="float-right">
+        {{#view Em.FacebookLoginButton type="login-button" text="Conectar" data-size="xlarge" data-scope="email, offline_access"}}
+          {{App.FBUser.picture}}
+          {{App.FBUser.name}}
+          <a href="#" {{action "logout" target="FB"}} class="btn btn-danger">Sair</a>
+        {{/view}}
+      </div>
     </div>
   </div>
 </div>

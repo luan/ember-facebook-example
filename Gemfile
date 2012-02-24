@@ -19,6 +19,11 @@ end
 gem 'jquery-rails'
 gem 'ember-rails'
 
+group :development do
+  gem 'thin'
+  gem 'foreman'
+end
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
