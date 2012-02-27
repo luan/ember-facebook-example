@@ -10,7 +10,7 @@
       </div>
       <div class="float-right">
         {{#view Em.FacebookLoginButton type="login-button" text="Conectar" data-size="xlarge" data-scope="email, offline_access"}}
-          {{App.FBUser.picture}}
+          <img {{bindAttr src="App.FBUser.picture" alt="App.FBUser.name"}} />
           {{App.FBUser.name}}
           <a href="#" {{action "logout" target="FB"}} class="btn btn-danger">Sair</a>
         {{/view}}

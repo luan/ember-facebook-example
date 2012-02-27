@@ -71,6 +71,10 @@ Ember.FacebookView = Ember.View.extend
 Ember.FacebookLoginButton = Ember.FacebookView.extend
   userBinding: 'FBApp.FBUser'
 
+  init: ->
+    @set 'type', 'login-button'
+    @_super()
+
   userChanged: (->
     if @get('user')
       @set 'className', ''
