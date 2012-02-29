@@ -68,27 +68,3 @@ Ember.FacebookView = Ember.View.extend
   didInsertElement: ->
     @parse()
 
-Ember.FacebookLoginButton = Ember.FacebookView.extend
-  userBinding: 'FBApp.FBUser'
-
-  init: ->
-    @set 'type', 'login-button'
-    @_super()
-
-  userChanged: (->
-    if @get('user')
-      @set 'className', ''
-      @rerender()
-    else
-      @loggedOff()
-
-  ).observes('user')
-
-  loggedOff: ->
-    @$().html (@get 'text' or 'Login')
-    @setClassName()
-    @parse()
-
-  didInsertElement: ->
-    unless @user?
-      @loggedOff()
